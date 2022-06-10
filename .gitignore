@@ -1,3 +1,4 @@
 .DS_Store
 .vscode/
 Convolution Neural Network/data/
+Convolution Neural Network/__pycache__/
