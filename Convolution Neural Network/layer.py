@@ -100,7 +100,7 @@ class Convolution:
         FN, C, FH, FW = self.W.shape
         dout = dout.transpose(0, 2, 3, 1).reshape(-1, FN)
 
-        self.db = np.sub(dout, axis=0)
+        self.db = np.sum(dout, axis=0)
         self.dW = np.dot(self.col.T, dout)
         self.dW = self.dW.transpose(1, 0).reshape(FN, C, FH, FW)
 
@@ -141,7 +141,7 @@ class Pooling:
         pool_size = self.pool_h * self.pool_w
         dmax = np.zeros((dout.size, pool_size))
         dmax[np.arange(self.arg_max.size), self.arg_max.flatten()] = dout.flatten()
-        dmax = dmax.reshape(dout.shape, +(pool_size,))
+        dmax = dmax.reshape(dout.shape + (pool_size,))
 
         dcol = dmax.reshape(dmax.shape[0] * dmax.shape[1] * dmax.shape[2], -1)
         dx = col2im(dcol, self.x.shape, self.pool_h, self.pool_w, self.stride, self.pad)
