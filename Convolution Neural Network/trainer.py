@@ -1,4 +1,4 @@
-from optimizer import SGD, AdaGrad
+from optimizer import SGD, AdaGrad, Adam
 import numpy as np
 
 
@@ -27,7 +27,7 @@ class Trainer:
         self.mini_batch_size = mini_batch_size
         self.eval_sample_num_per_epoch = eval_sample_num_per_epoch
 
-        optimizer_dict = {"sgd": SGD, "adagrad": AdaGrad}
+        optimizer_dict = {"sgd": SGD, "adagrad": AdaGrad, "adam": Adam}
         self.optimizer = optimizer_dict[optimizer.lower()](**optimizer_param)
         self.train_size = x_train.shape[0]
         self.iter_per_epoch = max(self.train_size / mini_batch_size, 1)

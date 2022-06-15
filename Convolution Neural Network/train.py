@@ -21,7 +21,7 @@ trainer = Trainer(
     t_test,
     epochs=epochs,
     mini_batch_size=1000,
-    optimizer="AdaGrad",
+    optimizer="Adam",
     optimizer_param={"lr": 0.01},
     eval_sample_num_per_epoch=1,
 )
