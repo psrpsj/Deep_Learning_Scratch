@@ -84,5 +84,6 @@ class Trainer:
             self.train_step()
 
         test_acc = self.network.accuracy(self.x_test, self.t_test)
+        self.network.save_parameter()
         if self.verbose:
             print("=== Final Accuracy: " + str(test_acc))

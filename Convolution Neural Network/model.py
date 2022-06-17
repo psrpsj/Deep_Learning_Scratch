@@ -1,6 +1,8 @@
 from collections import OrderedDict
 from layer import Affine, Convolution, Pooling, Relu, SoftmaxWithLoss
 import numpy as np
+import os
+import pickle
 
 
 class SimpleConvNet:
@@ -96,3 +98,27 @@ class SimpleConvNet:
         grads["b3"] = self.layers["Affine2"].db
 
         return grads
+
+    def save_parameter(self, file_name="params.pkl"):
+        param = {}
+        if not os.path.exists("./result"):
+            os.makedirs("./result")
+
+        file_name = os.path.join("./result", file_name)
+        for key, val in self.params.items():
+            param[key] = val
+
+        with open(file_name, "wb") as f:
+            pickle.dump(param, f)
+
+    def load_parameter(self, file_name="params.pkl"):
+        file_name = os.path.join("./result", file_name)
+        if os.path.exists(file_name):
+            with open(file_name, "rb") as f:
+                params = pickle.load(f)
+            for key, val in params.items():
+                self.params[key] = val
+
+            for i, key in enumerate(["Conv1", "Affine1", "Affine2"]):
+                self.layers[key].W = self.params["W" + str(i + 1)]
+                self.layers[key].b = self.params["b" + str(i + 1)]
