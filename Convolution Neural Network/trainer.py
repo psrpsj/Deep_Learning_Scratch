@@ -1,5 +1,7 @@
 from optimizer import SGD, AdaGrad, Adam
 import numpy as np
+import os
+import csv
 
 
 class Trainer:
@@ -11,7 +13,7 @@ class Trainer:
         x_test,
         t_test,
         epochs=20,
-        mini_batch_size=100,
+        mini_batch_size=1,
         optimizer="SGD",
         optimizer_param={"lr": 0.01},
         eval_sample_num_per_epoch=None,
@@ -34,6 +36,7 @@ class Trainer:
         self.max_iter = int(epochs * self.iter_per_epoch)
         self.current_iter = 0
         self.current_epoch = 0
+        self.result = {}
         self.train_loss_list = []
         self.train_acc_list = []
         self.test_acc_list = []
@@ -79,11 +82,25 @@ class Trainer:
 
             self.current_iter += 1
 
+    def save_result(self, file_name="result.csv"):
+        if not os.path.exists("./result"):
+            os.makedirs("./result")
+        file_name = os.path.join("./result", file_name)
+        with open(file_name, "wb") as f:
+            writer = csv.writer(f)
+            writer.writerow(self.result.keys())
+            writer.writerows(self.result.values())
+
     def train(self):
         for i in range(self.max_iter):
             self.train_step()
 
         test_acc = self.network.accuracy(self.x_test, self.t_test)
+        self.test_acc_list.append(test_acc)
+        self.result["train_loss"] = self.train_loss_list
+        self.result["train_acc"] = self.train_acc_list
+        self.result["test_acc"] = self.test_acc_list
         self.network.save_parameter()
+        self.save_result()
         if self.verbose:
             print("=== Final Accuracy: " + str(test_acc))
