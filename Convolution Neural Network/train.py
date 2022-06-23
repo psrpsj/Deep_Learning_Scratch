@@ -3,7 +3,7 @@ from model import SimpleConvNet
 from trainer import Trainer
 
 x_train, t_train, x_test, t_test = load_mnist(flatten=False)
-epochs = 1
+epochs = 10
 
 model = SimpleConvNet(
     input_dim=(1, 28, 28),
